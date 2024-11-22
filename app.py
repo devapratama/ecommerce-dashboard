@@ -1,12 +1,12 @@
-st.set_page_config(
-    page_title="📊 Dashboard E-Commerce"
-)
-
 # === Import Libraries ===
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
+
+st.set_page_config(
+    page_title="📊 Dashboard E-Commerce"
+)
 
 # === Caching Function for Data Loading ===
 @st.cache_data
