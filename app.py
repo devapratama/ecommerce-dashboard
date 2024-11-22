@@ -1,3 +1,7 @@
+st.set_page_config(
+    page_title="📊 Dashboard E-Commerce"
+)
+
 # === Import Libraries ===
 import streamlit as st
 import pandas as pd
