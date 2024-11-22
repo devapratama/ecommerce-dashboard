@@ -32,10 +32,7 @@ def load_data():
 merged_data = load_data()
 
 # === Data Cleaning ===
-# Hapus baris dengan data tanggal yang hilang
 merged_data = merged_data.dropna(subset=['order_purchase_timestamp', 'order_delivered_customer_date'])
-
-# Pastikan tipe data yang benar
 merged_data['review_score'] = merged_data['review_score'].astype(int)
 
 # === Streamlit Dashboard Layout ===
@@ -59,11 +56,9 @@ states = st.sidebar.multiselect(
     default=merged_data['customer_state'].dropna().unique()
 )
 
-# Pastikan tanggal terkonversi dengan benar
-min_time = merged_data['order_purchase_timestamp'].min().date()  # Menggunakan .date() untuk mengonversi ke tipe date
+min_time = merged_data['order_purchase_timestamp'].min().date()
 max_time = merged_data['order_purchase_timestamp'].max().date()
 
-# Ubah slider untuk menerima objek datetime.date
 time_range = st.sidebar.slider(
     "Rentang Waktu Pembelian",
     min_value=min_time,
@@ -94,7 +89,7 @@ st.plotly_chart(fig1)
 
 # === Section 2: Kategori Produk Terpopuler ===
 st.subheader("🛍️ Top Kategori Produk")
-top_categories = filtered_data['product_category_name_english'].value_counts().head(10)
+top_categories = filtered_data['product_category_name_english'].value_counts().sort_values(ascending=False).head(10)
 
 fig2 = px.bar(
     x=top_categories.values,
@@ -103,6 +98,7 @@ fig2 = px.bar(
     labels={"x": "Jumlah Penjualan", "index": "Kategori Produk"},
     title="10 Kategori Produk Teratas"
 )
+fig2.update_layout(yaxis=dict(categoryorder='total ascending'))
 st.plotly_chart(fig2)
 
 # === Section 3: Distribusi Durasi Pengiriman ===
@@ -157,7 +153,7 @@ fig6 = px.pie(
 )
 st.plotly_chart(fig6)
 
-# === Section 7: Pendapatan Berdasarkan Kategori ===
+# === Section 7: Pendapatan Berdasarkan Kategori Produk ===
 st.subheader("💰 Pendapatan Berdasarkan Kategori Produk")
 category_revenue = filtered_data.groupby('product_category_name_english')['price'].sum().sort_values(ascending=False).head(10)
 
@@ -168,4 +164,5 @@ fig7 = px.bar(
     labels={"x": "Total Penjualan (BRL)", "index": "Kategori Produk"},
     title="Pendapatan Top 10 Kategori Produk"
 )
+fig7.update_layout(yaxis=dict(categoryorder='total ascending'))
 st.plotly_chart(fig7)
